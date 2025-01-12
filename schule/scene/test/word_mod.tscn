@@ -4,7 +4,8 @@
 [ext_resource type="TileSet" uid="uid://0cnc5m8kqpin" path="res://tilesets/game_tile_set.tres" id="1_55q7l"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_tn0hj"]
-seed = -1065
+seed = -2
+frequency = 0.015
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_qnkhw"]
 noise = SubResource("FastNoiseLite_tn0hj")
@@ -14,6 +15,7 @@ script = ExtResource("1_52k4l")
 noiseHeight = SubResource("NoiseTexture2D_qnkhw")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = ExtResource("1_55q7l")
@@ -22,3 +24,5 @@ layer_0/name = "water"
 layer_0/z_index = -1
 layer_1/name = "gras"
 layer_1/z_index = -1
+layer_2/name = "hills"
+layer_2/z_index = -1
