@@ -70,22 +70,22 @@ func generate_world():
 				elif noise_val_Biome <= -0.05:
 					TerrainArr[2].append(Vector2i(x,y))
 				
-			if noise_val >= 0.15:
-				print("je")
-				TerrainArr[3].append(Vector2i(x,y))
-				if noise_val_Biome >= 0.12:
-					TerrainArr[4].append(Vector2i(x,y))
-				elif noise_val_Biome <= -0.05:
-					TerrainArr[5].append(Vector2i(x,y))
+			#if noise_val >= 0.15:
+			#	print("je")
+			#	TerrainArr[3].append(Vector2i(x,y))
+			#	if noise_val_Biome >= 0.12:
+			#		TerrainArr[4].append(Vector2i(x,y))
+			#	elif noise_val_Biome <= -0.05:
+			#		TerrainArr[5].append(Vector2i(x,y))
 					
 					
 				
 			tileMap.set_cell(waterLayer ,Vector2(x,y), sourceIdWater, waterAtlas) #Wasser soll ja überhall hin also lassen packen wir dasl "drunter"
-	print(TerrainArr[3])
+	#print(TerrainArr[3])
 	tileMap.set_cells_terrain_connect(grasLayer, TerrainArr[0], terrainGrasInt, 0)
 	tileMap.set_cells_terrain_connect(iceLayer, TerrainArr[1], terrainIceInt, 0)
 	tileMap.set_cells_terrain_connect(magicLayer, TerrainArr[2], terrainMagicInt, 0)
-	tileMap.set_cells_terrain_connect(hillsLayer, TerrainArr[3], terrainHillsInt, 0, 0)
-	tileMap.set_cells_terrain_connect(hillsLayer, TerrainArr[4], terrainHillsInt, 1, 0)
-	tileMap.set_cells_terrain_connect(hillsLayer, TerrainArr[5], terrainMagicHillsInt, 0)
+	#tileMap.set_cells_terrain_connect(hillsLayer, TerrainArr[3], terrainHillsInt, 0, 0)
+	#tileMap.set_cells_terrain_connect(hillsLayer, TerrainArr[4], terrainHillsInt, 1, 0)
+	#tileMap.set_cells_terrain_connect(hillsLayer, TerrainArr[5], terrainMagicHillsInt, 0)
 	
