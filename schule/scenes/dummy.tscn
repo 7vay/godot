@@ -1,0 +1,107 @@
+[gd_scene load_steps=11 format=3 uid="uid://bnamdfbbk335"]
+
+[ext_resource type="Shader" path="res://shader/hit_shader.gdshader" id="1_2udh6"]
+[ext_resource type="Texture2D" uid="uid://cjt7qi6guppwg" path="res://assets/sprites/dummy.png" id="1_l4g1q"]
+[ext_resource type="Script" path="res://scripts/dummy.gd" id="1_oiphi"]
+[ext_resource type="Script" path="res://scripts/entities/hitbox.gd" id="4_g3p7x"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wmm6l"]
+radius = 6.0
+height = 24.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d0bw5"]
+resource_local_to_scene = true
+shader = ExtResource("1_2udh6")
+shader_parameter/flash_color = Color(1, 1, 1, 1)
+shader_parameter/flash_value = 0.0
+
+[sub_resource type="Animation" id="Animation_p4xll"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:material:shader_parameter/flash_value")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_cwons"]
+resource_name = "hit"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:material:shader_parameter/flash_value")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 1.0, 0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1.1, 1), Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_eg34a"]
+_data = {
+"RESET": SubResource("Animation_p4xll"),
+"hit": SubResource("Animation_cwons")
+}
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ucalm"]
+radius = 5.0
+height = 22.0
+
+[node name="Dummy" type="CharacterBody2D"]
+script = ExtResource("1_oiphi")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -11)
+shape = SubResource("CapsuleShape2D_wmm6l")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_d0bw5")
+position = Vector2(0, -12)
+texture = ExtResource("1_l4g1q")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_eg34a")
+}
+
+[node name="HitBox" type="Area2D" parent="."]
+visibility_layer = 2
+position = Vector2(0, -11)
+script = ExtResource("4_g3p7x")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+light_mask = 2
+shape = SubResource("CapsuleShape2D_ucalm")

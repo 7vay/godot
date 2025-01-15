@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://oy5ts2cuvcxr"]
 
-[ext_resource type="Script" path="res://scripts/gen_world.gd" id="1_52k4l"]
-[ext_resource type="TileSet" uid="uid://0cnc5m8kqpin" path="res://tilesets/game_tile_set.tres" id="1_55q7l"]
+[ext_resource type="Script" path="res://scripts/gen_world.gd" id="1_ksmli"]
+[ext_resource type="TileSet" uid="uid://0cnc5m8kqpin" path="res://tilesets/game_tile_set.tres" id="2_pcgp4"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_tn0hj"]
 noise_type = 3
@@ -18,14 +18,14 @@ seed = 5
 noise = SubResource("FastNoiseLite_w5bsb")
 
 [node name="Node2D" type="Node2D"]
-script = ExtResource("1_52k4l")
+script = ExtResource("1_ksmli")
 noiseHeight = SubResource("NoiseTexture2D_qnkhw")
 noiseBiome = SubResource("NoiseTexture2D_r7wml")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
 [node name="TileMap" type="TileMap" parent="."]
-tile_set = ExtResource("1_55q7l")
+tile_set = ExtResource("2_pcgp4")
 format = 2
 layer_0/name = "water"
 layer_0/z_index = -1

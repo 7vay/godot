@@ -1,0 +1,28 @@
+[gd_scene load_steps=6 format=3 uid="uid://bai5ncmpggka"]
+
+[ext_resource type="Texture2D" uid="uid://5kwfphhwa3j" path="res://assets/sprites/grass_variant_1.png" id="1_vkxg7"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_06gc8"]
+texture = ExtResource("1_vkxg7")
+texture_region_size = Vector2i(24, 24)
+0:0/0 = 0
+0:0/0/custom_data_0 = 5.0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_7slih"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rqt4g"]
+texture = SubResource("CompressedTexture2D_7slih")
+texture_region_size = Vector2i(24, 24)
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_s0nw8"]
+tile_size = Vector2i(24, 24)
+custom_data_layer_0/name = "Height"
+custom_data_layer_0/type = 3
+sources/0 = SubResource("TileSetAtlasSource_06gc8")
+sources/1 = SubResource("TileSetAtlasSource_rqt4g")
+
+[node name="World" type="Node2D"]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+tile_set = SubResource("TileSet_s0nw8")
