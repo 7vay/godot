@@ -26,27 +26,24 @@ var grasAtlas = Vector2i(1,1)
 #LAYER
 var waterLayer = 0
 var grasLayer = 1
-var magicLayer = 2
-var iceLayer = 3
-var hillsLayer = 4
+var sandLayer = 2
+var magicLayer = 3
+var iceLayer = 4
+var hillsLayer = 5
 
 #TERRAIN
 var terrainGrasInt = 0
-var terrainHillsInt = 1
+var terrainSandInt = 1
 var terrainMagicInt = 2
-var terrainMagicHillsInt = 3
-var terrainIceInt = 4
-var terrainIceHillsInt = 5
-var terrainNumbers = 6
+var terrainIceInt = 3
+var terrainNumbers = 4
 
 #TILES ARR
 var TerrainArr = [] 
 # gras = 0
-# ice = 1
-# magic = 2
-# grasHills = 3
-# iceHills = 4
-# magicHills = 5
+#sand = 1
+# ice = 2
+# magic = 3 
 
 
 func _ready():
@@ -66,6 +63,8 @@ func generate_world():
 			if noise_val >= 0.05:
 				TerrainArr[0].append(Vector2i(x,y))
 				if noise_val_Biome >= 0.12:
+					if noise_val_Biome >= 0.19:
+						TerrainArr[3].append(Vector2i(x,y))
 					TerrainArr[1].append(Vector2i(x,y))
 				elif noise_val_Biome <= -0.05:
 					TerrainArr[2].append(Vector2i(x,y))
@@ -83,8 +82,9 @@ func generate_world():
 			tileMap.set_cell(waterLayer ,Vector2(x,y), sourceIdWater, waterAtlas) #Wasser soll ja überhall hin also lassen packen wir dasl "drunter"
 	#print(TerrainArr[3])
 	tileMap.set_cells_terrain_connect(grasLayer, TerrainArr[0], terrainGrasInt, 0)
-	tileMap.set_cells_terrain_connect(iceLayer, TerrainArr[1], terrainIceInt, 0)
-	tileMap.set_cells_terrain_connect(magicLayer, TerrainArr[2], terrainMagicInt, 0)
+	tileMap.set_cells_terrain_connect(iceLayer, TerrainArr[2], terrainIceInt, 0)
+	tileMap.set_cells_terrain_connect(magicLayer, TerrainArr[3], terrainMagicInt, 0)
+	tileMap.set_cells_terrain_connect(sandLayer, TerrainArr[1], terrainSandInt, 0)
 	#tileMap.set_cells_terrain_connect(hillsLayer, TerrainArr[3], terrainHillsInt, 0, 0)
 	#tileMap.set_cells_terrain_connect(hillsLayer, TerrainArr[4], terrainHillsInt, 1, 0)
 	#tileMap.set_cells_terrain_connect(hillsLayer, TerrainArr[5], terrainMagicHillsInt, 0)

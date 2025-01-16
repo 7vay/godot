@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bikqdspn7t6w3"
-path="res://.godot/imported/Magic_Hills.png-3de11f0ee8276f301e16ed7293aca8a8.ctex"
+uid="uid://d3licnehp4x4c"
+path="res://.godot/imported/Sand_Biome.png-28c74703155a23c3b091426da8cba648.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/game/tilesets/Magic_Hills.png"
-dest_files=["res://.godot/imported/Magic_Hills.png-3de11f0ee8276f301e16ed7293aca8a8.ctex"]
+source_file="res://assets/game/tilesets/Sand_Biome.png"
+dest_files=["res://.godot/imported/Sand_Biome.png-28c74703155a23c3b091426da8cba648.ctex"]
 
 [params]
 
