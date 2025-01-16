@@ -53,6 +53,13 @@ hit={
 ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="environment"
+2d_physics/layer_2="player"
+2d_physics/layer_3="interactions"
+2d_physics/layer_9="props (Objekte die sich im environment bewegen lassen sollen)"
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0

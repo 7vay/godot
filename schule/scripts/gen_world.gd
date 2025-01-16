@@ -12,11 +12,10 @@ var height : int = 200
 #SOURCE IDS
 var sourceIdWater = 0 
 var sourceIdGras = 1
-var sourceIdHills = 2
+var sourceIdSand = 2
 var sourceIdMagic = 3
-var sourceIdMagicHills = 4
-var sourceIdIce = 5
-var sourceIdIceHills = 6
+var sourceIdIce = 4
+var sourceIdHills = 5
 
 #ATLAS
 var hillsTreppeAtlas = Vector2i(9,4)
@@ -36,7 +35,8 @@ var terrainGrasInt = 0
 var terrainSandInt = 1
 var terrainMagicInt = 2
 var terrainIceInt = 3
-var terrainNumbers = 4
+var terrainHillsInt = 4
+var terrainNumbers = 5
 
 #TILES ARR
 var TerrainArr = [] 
@@ -44,6 +44,7 @@ var TerrainArr = []
 #sand = 1
 # ice = 2
 # magic = 3 
+# hills = 4
 
 
 func _ready():
@@ -60,7 +61,9 @@ func generate_world():
 			var noise_val : float = noise.get_noise_2d(x,y)
 			var noise_val_Biome : float = noiseB.get_noise_2d(x,y)
 			
-			if noise_val >= 0.05:
+			if noise_val >= 0.1:
+				TerrainArr[4].append(Vector2i(x,y))
+			if noise_val >= -0.05:
 				TerrainArr[0].append(Vector2i(x,y))
 				if noise_val_Biome >= 0.12:
 					if noise_val_Biome >= 0.19:
@@ -68,24 +71,12 @@ func generate_world():
 					TerrainArr[1].append(Vector2i(x,y))
 				elif noise_val_Biome <= -0.05:
 					TerrainArr[2].append(Vector2i(x,y))
-				
-			#if noise_val >= 0.15:
-			#	print("je")
-			#	TerrainArr[3].append(Vector2i(x,y))
-			#	if noise_val_Biome >= 0.12:
-			#		TerrainArr[4].append(Vector2i(x,y))
-			#	elif noise_val_Biome <= -0.05:
-			#		TerrainArr[5].append(Vector2i(x,y))
-					
-					
-				
+			
 			tileMap.set_cell(waterLayer ,Vector2(x,y), sourceIdWater, waterAtlas) #Wasser soll ja überhall hin also lassen packen wir dasl "drunter"
-	#print(TerrainArr[3])
+			
 	tileMap.set_cells_terrain_connect(grasLayer, TerrainArr[0], terrainGrasInt, 0)
 	tileMap.set_cells_terrain_connect(iceLayer, TerrainArr[2], terrainIceInt, 0)
 	tileMap.set_cells_terrain_connect(magicLayer, TerrainArr[3], terrainMagicInt, 0)
 	tileMap.set_cells_terrain_connect(sandLayer, TerrainArr[1], terrainSandInt, 0)
-	#tileMap.set_cells_terrain_connect(hillsLayer, TerrainArr[3], terrainHillsInt, 0, 0)
-	#tileMap.set_cells_terrain_connect(hillsLayer, TerrainArr[4], terrainHillsInt, 1, 0)
-	#tileMap.set_cells_terrain_connect(hillsLayer, TerrainArr[5], terrainMagicHillsInt, 0)
+	tileMap.set_cells_terrain_connect(hillsLayer, TerrainArr[4], terrainHillsInt, 0)
 	
