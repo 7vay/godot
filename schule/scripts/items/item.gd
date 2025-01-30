@@ -9,3 +9,6 @@ func on_interaction():
 
 func on_hit(player: Player):
 	pass
+
+func on_collect():
+	pass
