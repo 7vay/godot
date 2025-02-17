@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://dusvya2leakmm" path="res://assets/game/objects/Basic_Grass_Biom_things.png" id="4_cf8dw"]
 [ext_resource type="Texture2D" uid="uid://b5wc3qfigun2r" path="res://assets/game/tilesets/Magic_Biome.png" id="4_om3ny"]
 [ext_resource type="Texture2D" uid="uid://tpbmv6sef36" path="res://assets/game/tilesets/Ice_Biome.png" id="6_6oe3r"]
-[ext_resource type="Texture2D" uid="uid://uu564swqnwmf" path="res://assets/game/tilesets/hills.png" id="6_a4md4"]
+[ext_resource type="Texture2D" uid="uid://uu564swqnwmf" path="res://assets/game/tilesets/Hills.png" id="6_a4md4"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1do37"]
 texture = ExtResource("1_j806i")
