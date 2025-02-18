@@ -1,19 +1,23 @@
 extends Node2D 
 
-@export var noiseHeight : NoiseTexture2D #das ist der "generator" des Noise
-@export var noiseBiome : NoiseTexture2D #Biome
+@export var noiseHeight : NoiseTexture2D # Generator für Terrain-Noise
+@export var noiseBiome : NoiseTexture2D  # Generator für Biome
 
 var noise : Noise
 var noiseB : Noise
 
-@onready var tileMap = $TileMap # importieren der Sprites
+@onready var tileMap = $TileMap  # Deine TileMap
 @onready var camera = $Player/Camera2D
 
 var renderDistance = 10
 var tileSize = 16
 var lastPositionCamera = Vector2.ZERO
 
-#SOURCE IDS
+#CHUNK-SETTINGS 
+var CHUNK_SIZE = 10
+var loaded_chunks = {} 
+
+#SOURCE IDS 
 var sourceIdWater = 0 
 var sourceIdGras = 1
 var sourceIdSand = 2
@@ -23,7 +27,7 @@ var sourceIdHills = 5
 
 #ATLAS
 var hillsTreppeAtlas = Vector2i(9,4)
-var waterAtlas = Vector2i(0,0) #position des Wassers auf dem Spritesheet
+var waterAtlas = Vector2i(0,0)
 var grasAtlas = Vector2i(1,1)
 
 #LAYER
@@ -34,7 +38,7 @@ var magicLayer = 3
 var iceLayer = 4
 var hillsLayer = 5
 
-#TERRAIN
+#TERRAIN-IDs
 var terrainGrasInt = 0
 var terrainSandInt = 1
 var terrainIceInt = 2
@@ -42,42 +46,51 @@ var terrainMagicInt = 3
 var terrainHillsInt = 4
 var terrainNumbers = 5
 
-#TILES ARR
-var TerrainArr = [] 
-# gras = 0
-# sand = 1
-# ice = 2
-# magic = 3 
-# hills = 4
-
-
 func _ready():
-	noise = noiseHeight.noise #gibt das Generierte Noise in eine Variable über
+	noise = noiseHeight.noise
 	noiseB = noiseBiome.noise
-	for x in range(0,terrainNumbers):
-		TerrainArr.append([])
 	update_world()
 
-
 func update_world():
-	
 	var cameraPosition = camera.global_position
-	var viewportSize = Vector2(get_viewport().size) / camera.zoom  # Sichtbereich anpassen an Zoom
+	var viewportSize = Vector2(get_viewport().size) / camera.zoom  
+	
 	var min_x = int((cameraPosition.x - viewportSize.x / 2) / tileSize) - renderDistance
 	var max_x = int((cameraPosition.x + viewportSize.x / 2) / tileSize) + renderDistance
 	var min_y = int((cameraPosition.y - viewportSize.y / 2) / tileSize) - renderDistance
 	var max_y = int((cameraPosition.y + viewportSize.y / 2) / tileSize) + renderDistance
 	
-	TerrainArr.clear()  
-	for i in range(6):
-		TerrainArr.append([])
+	var min_chunk_x = int(floor(min_x / CHUNK_SIZE))
+	var max_chunk_x = int(floor(max_x / CHUNK_SIZE))
+	var min_chunk_y = int(floor(min_y / CHUNK_SIZE))
+	var max_chunk_y = int(floor(max_y / CHUNK_SIZE))
 	
-	for x in range(min_x , max_x + renderDistance):
-		for y in range(min_y , max_y + renderDistance):
-			var noise_val : float = noise.get_noise_2d(x,y)
-			var noise_val_Biome : float = noiseB.get_noise_2d(x,y)
-			var pos = Vector2i(x,y)
-			var tileDa = false
+	for cx in range(min_chunk_x, max_chunk_x + 1):
+		for cy in range(min_chunk_y, max_chunk_y + 1):
+			var chunk_key = str(cx) + "_" + str(cy)
+			if not loaded_chunks.has(chunk_key):
+				if load_chunk(cx, cy) == false:
+					generate_chunk(cx, cy)
+
+func generate_chunk(chunk_x: int, chunk_y: int) -> void:
+	var chunk_key = str(chunk_x) + "_" + str(chunk_y)
+	var chunk_data = {
+		"grass": [],
+		"sand": [],
+		"ice": [],
+		"magic": [],
+		"hills": []
+	}
+	
+	for local_x in range(0, CHUNK_SIZE):
+		for local_y in range(0, CHUNK_SIZE):
+			var world_x = chunk_x * CHUNK_SIZE + local_x
+			var world_y = chunk_y * CHUNK_SIZE + local_y
+			var pos = Vector2i(world_x, world_y)
+			
+			var noise_val : float = noise.get_noise_2d(world_x, world_y)
+			var noise_val_Biome : float = noiseB.get_noise_2d(world_x, world_y)
+			
 			var newTerrain = -1
 			var newTerrainGras = -1
 			var newTerrainSand = -1
@@ -92,29 +105,70 @@ func update_world():
 					newTerrainGras = terrainGrasInt
 				elif noise_val_Biome <= -0.05:
 					newTerrain = terrainIceInt
-					
-			if tileMap.get_cell_source_id(waterLayer, pos) != sourceIdWater:
-				tileMap.set_cell(waterLayer ,pos , sourceIdWater, waterAtlas) #Wasser soll ja überhall hin also lassen packen wir dasl "drunter"
 			
-			if newTerrain != -1 || newTerrainGras != -1 || newTerrainSand != -1:
-				var pruefendeLayer = [grasLayer, iceLayer, magicLayer, sandLayer, hillsLayer]
-				for layer in pruefendeLayer: 
-					if tileMap.get_cell_source_id(layer, pos) != -1:
-						tileDa = true
-						break;
-				if !tileDa: 
-					TerrainArr[newTerrain].append(pos)
-					TerrainArr[newTerrainGras].append(pos)
-					TerrainArr[newTerrainSand].append(pos)
+			tileMap.set_cell(waterLayer, pos, sourceIdWater, waterAtlas)
 			
-	tileMap.set_cells_terrain_connect(grasLayer, TerrainArr[0], terrainGrasInt, 0)
-	tileMap.set_cells_terrain_connect(iceLayer, TerrainArr[2], terrainIceInt, 0)
-	tileMap.set_cells_terrain_connect(magicLayer, TerrainArr[3], terrainMagicInt, 0)
-	tileMap.set_cells_terrain_connect(sandLayer, TerrainArr[1], terrainSandInt, 0)
-	tileMap.set_cells_terrain_connect(hillsLayer, TerrainArr[4], terrainHillsInt, 0)
+			if newTerrain != -1 or newTerrainGras != -1 or newTerrainSand != -1:
+				if newTerrainGras != -1:
+					chunk_data["grass"].append(pos)
+				if newTerrainSand != -1:
+					chunk_data["sand"].append(pos)
+				if newTerrain == terrainHillsInt:
+					chunk_data["hills"].append(pos)
+				elif newTerrain == terrainMagicInt:
+					chunk_data["magic"].append(pos)
+				elif newTerrain == terrainIceInt:
+					chunk_data["ice"].append(pos)
 	
+	tileMap.set_cells_terrain_connect(grasLayer, chunk_data["grass"], terrainGrasInt, 0)
+	tileMap.set_cells_terrain_connect(sandLayer, chunk_data["sand"], terrainSandInt, 0)
+	tileMap.set_cells_terrain_connect(hillsLayer, chunk_data["hills"], terrainHillsInt, 0)
+	tileMap.set_cells_terrain_connect(magicLayer, chunk_data["magic"], terrainMagicInt, 0)
+	tileMap.set_cells_terrain_connect(iceLayer, chunk_data["ice"], terrainIceInt, 0)
+	
+	loaded_chunks[chunk_key] = chunk_data
+	
+	save_chunk(chunk_x, chunk_y)
+
+
+func save_chunk(chunk_x: int, chunk_y: int) -> void:
+	var chunk_key = str(chunk_x) + "_" + str(chunk_y)
+	if not loaded_chunks.has(chunk_key):
+		return
+	var chunk_data = loaded_chunks[chunk_key]
+	
+	var file_path = "res://saved/chunks/" + chunk_key + ".json"
+	var file = FileAccess.open(file_path, FileAccess.WRITE)
+	
+	if file:
+		file.store_string(JSON.stringify(chunk_data))
+		file.close()
+
+
+func load_chunk(chunk_x: int, chunk_y: int) -> bool:
+	var chunk_key = str(chunk_x) + "_" + str(chunk_y)
+	var file_path = "user://chunk_" + chunk_key + ".json"
+	var file = FileAccess.open(file_path, FileAccess.WRITE)
+	if not file.file_exists(file_path):
+		return false
+	if file:
+		return false
+	var data_str = file.get_as_text()
+	file.close()
+	var json = JSON.new()
+	var chunk_data = json.parse(data_str)
+	
+	tileMap.set_cells_terrain_connect(grasLayer, chunk_data["grass"], terrainGrasInt, 0)
+	tileMap.set_cells_terrain_connect(sandLayer, chunk_data["sand"], terrainSandInt, 0)
+	tileMap.set_cells_terrain_connect(hillsLayer, chunk_data["hills"], terrainHillsInt, 0)
+	tileMap.set_cells_terrain_connect(magicLayer, chunk_data["magic"], terrainMagicInt, 0)
+	tileMap.set_cells_terrain_connect(iceLayer, chunk_data["ice"], terrainIceInt, 0)
+	
+	loaded_chunks[chunk_key] = chunk_data
+	return true
+
 func _physics_process(_delta):
 	var cameraPosition = camera.global_position
 	if cameraPosition.distance_to(lastPositionCamera) > tileSize:
 		update_world()
-		lastPositionCamera = cameraPosition  # Position updaten
+		lastPositionCamera = cameraPosition

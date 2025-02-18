@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://uu564swqnwmf"
-path="res://.godot/imported/hills.png-45df3828861664a938e4515251230ef0.ctex"
+uid="uid://ll0sr40b81qb"
+path="res://.godot/imported/Basic_Ice_Biom_things.png-f9d1ab35decadafca04b69a276163778.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/game/tilesets/hills.png"
-dest_files=["res://.godot/imported/hills.png-45df3828861664a938e4515251230ef0.ctex"]
+source_file="res://scripts/items/rescources/Basic_Ice_Biom_things.png"
+dest_files=["res://.godot/imported/Basic_Ice_Biom_things.png-f9d1ab35decadafca04b69a276163778.ctex"]
 
 [params]
 
