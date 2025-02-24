@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://d2o38pe37gbkl"
-path="res://.godot/imported/GrapeSoda.ttf-481c3f7dbce64057267a2ca68f46ae9e.fontdata"
+path="res://.godot/imported/GrapeSoda.ttf-7fe97ac67f3c28231017b5f0adca8724.fontdata"
 
 [deps]
 
-source_file="res://scenes/GrapeSoda.ttf"
-dest_files=["res://.godot/imported/GrapeSoda.ttf-481c3f7dbce64057267a2ca68f46ae9e.fontdata"]
+source_file="res://assets/game/fonts/GrapeSoda.ttf"
+dest_files=["res://.godot/imported/GrapeSoda.ttf-7fe97ac67f3c28231017b5f0adca8724.fontdata"]
 
 [params]
 
