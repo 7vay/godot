@@ -16,6 +16,7 @@ texture = ExtResource("1_8i2g1")
 stretch_mode = 2
 
 [node name="Heart2" type="TextureRect" parent="."]
+layout_mode = 0
 offset_left = 15.0
 offset_right = 28.0
 offset_bottom = 13.0
@@ -23,6 +24,7 @@ texture = ExtResource("2_lmksl")
 stretch_mode = 2
 
 [node name="Heart3" type="TextureRect" parent="."]
+layout_mode = 0
 offset_left = 29.0
 offset_right = 42.0
 offset_bottom = 13.0

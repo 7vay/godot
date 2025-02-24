@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bew5wg50rajch"]
 
-[ext_resource type="Script" path="res://main_menu.gd" id="1_mgclj"]
+[ext_resource type="Script" path="res://scripts/homescreen/main_menu.gd" id="1_mgclj"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_haaly"]
 bg_color = Color(0, 0, 0, 1)
@@ -58,13 +58,6 @@ theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("StyleBoxFlat_haaly")
 text = "Laden"
 
-[node name="OptionenButton" type="Button" parent="VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_font_sizes/font_size = 30
-theme_override_styles/normal = SubResource("StyleBoxFlat_haaly")
-text = "Optionen"
-
 [node name="BeendenButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -93,5 +86,4 @@ text = "Name"
 
 [connection signal="pressed" from="VBoxContainer/StartenButton" to="." method="_on_starten_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/LadenButton" to="." method="_on_laden_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/OptionenButton" to="." method="_on_optionen_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/BeendenButton" to="." method="_on_beenden_button_pressed"]
