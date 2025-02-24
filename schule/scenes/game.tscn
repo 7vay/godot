@@ -1,10 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://cptu8poyjm4fx"]
+[gd_scene load_steps=9 format=3 uid="uid://cptu8poyjm4fx"]
 
 [ext_resource type="Script" path="res://scripts/gen_world.gd" id="1_nfjh8"]
 [ext_resource type="PackedScene" uid="uid://dl8v4uxti1mg6" path="res://scenes/player.tscn" id="1_sr2pe"]
 [ext_resource type="TileSet" uid="uid://0cnc5m8kqpin" path="res://tilesets/game_tile_set.tres" id="2_da3bn"]
 [ext_resource type="PackedScene" uid="uid://bnamdfbbk335" path="res://scenes/dummy.tscn" id="6_ljmfh"]
-[ext_resource type="Script" path="res://scenes/item_manager.gd" id="8_bgx46"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_lp2yl"]
 
@@ -53,6 +52,3 @@ position = Vector2(66, 75)
 
 [node name="Dummy3" parent="." instance=ExtResource("6_ljmfh")]
 position = Vector2(69, 34)
-
-[node name="ItemManager" type="Node" parent="."]
-script = ExtResource("8_bgx46")

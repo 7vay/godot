@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://d1cs5qvdgiu2v"]
+
+[ext_resource type="Texture2D" uid="uid://doms1553dj16t" path="res://assets/game/objects/Basic_Ice_Biom_things.png" id="1_f14ug"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xrsyx"]
+atlas = ExtResource("1_f14ug")
+region = Rect2(78, 66, 20, 15)
+
+[node name="StoneIce" type="Sprite2D"]
+texture = SubResource("AtlasTexture_xrsyx")

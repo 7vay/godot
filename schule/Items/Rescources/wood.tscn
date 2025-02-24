@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://dg814k7fb8jop"]
-
-[ext_resource type="Script" path="res://scripts/items/rescources/wood.gd" id="1_gr13i"]
-
-[node name="Wood" type="Sprite2D"]
-script = ExtResource("1_gr13i")

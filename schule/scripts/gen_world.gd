@@ -41,10 +41,19 @@ var hillsLayer = 5
 #TERRAIN-IDs
 var terrainGrasInt = 0
 var terrainSandInt = 1
-var terrainIceInt = 2
-var terrainMagicInt = 3
+var terrainMagicInt = 2
+var terrainIceInt = 3
 var terrainHillsInt = 4
 var terrainNumbers = 5
+
+#CHANCES
+enum Biome {GRAS, ICE, MAGIC, SAND}
+var biomeData = {
+	Biome.ICE: {"tree": 0.08, "stone": 0.02, "treeSide": 0.005, "bush": 0.01, "ore": 0.02, "snow": 0.03},
+	Biome.GRAS: {"tree": 0.05, "stone": 0.05, "treeSide": 0.01, "bush": 0.04, "berryTree": 0.02, "flower": 0.1, "mushroom": 0.04, "leaf": 0.3, "log": 0.03},
+	Biome.MAGIC: {"tree": 0.4, "stone": 0.05, "treeSide": 0.005, "bush": 0.04, "berryTree": 0.02, "leaf": 0.2, "ore": 0.04, "log": 0.01},
+	Biome.SAND: {"tree": 0.05, "stone": 0.2, "flower": 0.05, "kaktus": 0.07 }
+}
 
 func _ready():
 	noise = noiseHeight.noise
@@ -75,11 +84,13 @@ func update_world():
 func generate_chunk(chunk_x: int, chunk_y: int) -> void:
 	var chunk_key = str(chunk_x) + "_" + str(chunk_y)
 	var chunk_data = {
-		"grass": [],
+		"gras": [],
 		"sand": [],
 		"ice": [],
 		"magic": [],
-		"hills": []
+		"hills": [],
+		"trees": [],
+		"stones": [],
 	}
 	
 	for local_x in range(0, CHUNK_SIZE):
@@ -87,6 +98,8 @@ func generate_chunk(chunk_x: int, chunk_y: int) -> void:
 			var world_x = chunk_x * CHUNK_SIZE + local_x
 			var world_y = chunk_y * CHUNK_SIZE + local_y
 			var pos = Vector2i(world_x, world_y)
+			var biome
+			var BiomeProp
 			
 			var noise_val : float = noise.get_noise_2d(world_x, world_y)
 			var noise_val_Biome : float = noiseB.get_noise_2d(world_x, world_y)
@@ -95,36 +108,62 @@ func generate_chunk(chunk_x: int, chunk_y: int) -> void:
 			var newTerrainGras = -1
 			var newTerrainSand = -1
 			
-			if noise_val >= 0.4:
-				newTerrain = terrainHillsInt
-			if noise_val >= -0.05:
+			#if noise_val >= 0.4:
+				#newTerrain = terrainHillsInt
+			if noise_val >= -0.3:
 				newTerrainSand = terrainSandInt
-				if noise_val_Biome >= 0.12:
-					if noise_val_Biome >= 0.19:
+				if noise_val_Biome >= 0.2:
+					if noise_val_Biome >= 0.25:
 						newTerrain = terrainMagicInt
 					newTerrainGras = terrainGrasInt
-				elif noise_val_Biome <= -0.05:
+				elif noise_val_Biome <= 0.05:
 					newTerrain = terrainIceInt
 			
 			tileMap.set_cell(waterLayer, pos, sourceIdWater, waterAtlas)
 			
 			if newTerrain != -1 or newTerrainGras != -1 or newTerrainSand != -1:
 				if newTerrainGras != -1:
-					chunk_data["grass"].append(pos)
+					chunk_data["gras"].append(pos)
+					#BiomeProp = biomeData[Biome.Gras]
+					#if randf() < BiomeProp["stone"]:
+						#spawnStone(pos, "gras")
 				if newTerrainSand != -1:
 					chunk_data["sand"].append(pos)
+					#BiomeProp = biomeData[Biome.SAND]
+					#if randf() < BiomeProp["stone"]:
+						#spawnStone(pos, "sand")
 				if newTerrain == terrainHillsInt:
 					chunk_data["hills"].append(pos)
 				elif newTerrain == terrainMagicInt:
 					chunk_data["magic"].append(pos)
+					#BiomeProp = biomeData[Biome.MAGIC]
+					#if randf() < BiomeProp["stone"]:
+						#spawnStone(pos, "magic")
 				elif newTerrain == terrainIceInt:
-					chunk_data["ice"].append(pos)
+					BiomeProp = biomeData[Biome.ICE]
+					biome = "ice"
+					chunk_data[biome].append(pos)
+					if randf() < BiomeProp["stone"]:
+						spawnStone(pos, biome)
+					elif randf() < BiomeProp["tree"]:
+						spawnTree(pos, biome)
+					elif randf() < BiomeProp["ore"]:
+						spawnOre(pos, biome)
+					elif randf() < BiomeProp["treeSide"]:
+						spawnSideTree(pos, biome)
+					elif randf() < BiomeProp["snow"]:
+						spawnSnow(pos, biome)
+					
+					
+			
 	
-	tileMap.set_cells_terrain_connect(grasLayer, chunk_data["grass"], terrainGrasInt, 0)
+	tileMap.set_cells_terrain_connect(grasLayer, chunk_data["gras"], terrainGrasInt, 0)
 	tileMap.set_cells_terrain_connect(sandLayer, chunk_data["sand"], terrainSandInt, 0)
-	tileMap.set_cells_terrain_connect(hillsLayer, chunk_data["hills"], terrainHillsInt, 0)
+	#tileMap.set_cells_terrain_connect(hillsLayer, chunk_data["hills"], terrainHillsInt, 0)
 	tileMap.set_cells_terrain_connect(magicLayer, chunk_data["magic"], terrainMagicInt, 0)
 	tileMap.set_cells_terrain_connect(iceLayer, chunk_data["ice"], terrainIceInt, 0)
+	
+	
 	
 	loaded_chunks[chunk_key] = chunk_data
 	
@@ -166,7 +205,37 @@ func load_chunk(chunk_x: int, chunk_y: int) -> bool:
 	
 	loaded_chunks[chunk_key] = chunk_data
 	return true
-
+	
+func spawnStone(pos, biome):
+	var stone = preload("res://Items/Rescources/IceBiome/stoneIce.tscn").instantiate()  
+	stone.position = pos * tileSize
+	add_child(stone)
+	
+func spawnTree(pos, biome):
+	var tree = preload("res://Items/Rescources/IceBiome/treeIce.tscn").instantiate()
+	tree.position = pos * tileSize
+	add_child(tree)
+	
+func spawnOre(pos, biome):
+	var ore = preload("res://Items/Rescources/IceBiome/Ore.tscn").instantiate()
+	ore.position = pos * tileSize
+	add_child(ore)
+	
+func spawnBush(pos, biome):
+	var bush = preload("res://Items/Rescources/IceBiome/bush.tscn").instantiate()
+	bush.position = pos * tileSize
+	add_child(bush)
+	
+func spawnSnow(pos, biome):
+	var snow = preload("res://Items/Rescources/IceBiome/snow.tscn").instantiate()
+	snow.position = pos * tileSize
+	add_child(snow)
+	
+func spawnSideTree(pos, biome):
+	var tree = preload("res://Items/Rescources/IceBiome/treeSide.tscn").instantiate()
+	tree.position = pos * tileSize
+	add_child(tree)
+	
 func _physics_process(_delta):
 	var cameraPosition = camera.global_position
 	if cameraPosition.distance_to(lastPositionCamera) > tileSize:
