@@ -52,17 +52,16 @@ func _on_world_button_pressed(world, button):
 		world_details.visible = true
 		delete_button.connect("pressed", Callable(self, "_on_delete_world").bind(world))
 
-func _on_world_selected(world, button):
- var current_time = Time.get_ticks_msec() / 1000.0  # Aktuelle Zeit in Sekunden
-
- if selected_world == world and current_time - last_click_time < DOUBLE_CLICK_TIME:
-  open_world(world)  # Wenn ja, öffne die Welt
-  return
+func _on_world_selected(world, button): 
+	var current_time = Time.get_ticks_msec() / 1000.0  # Aktuelle Zeit in Sekunden
+	if selected_world == world and current_time - last_click_time < DOUBLE_CLICK_TIME:
+		open_world(world)  # Wenn ja, öffne die Welt
+		return
 	
-selected_world = world  # Setzt die aktuell ausgewählte Welt
-last_click_time = current_time  # Speichert die Zeit des Klicks
-world_details.visible = true  # Zeigt das Detail-Pane für die ausgewählte Welt
-delete_button.connect("pressed", Callable(self, "_on_delete_world").bind(world))  # Verbindet den Löschen-Button mit der Lösch-Funktion
+	selected_world = world  # Setzt die aktuell ausgewählte Welt
+	last_click_time = current_time  # Speichert die Zeit des Klicks
+	world_details.visible = true  # Zeigt das Detail-Pane für die ausgewählte Welt
+	delete_button.connect("pressed", Callable(self, "_on_delete_world").bind(world))  # Verbindet den Löschen-Button mit der Lösch-Funktion
 
 # Funktion zum Öffnen einer Welt (Hier wird die Logik zum Laden einer Welt eingefügt)
 func open_world(world):
@@ -72,7 +71,7 @@ func open_world(world):
 # Wird aufgerufen, wenn der Benutzer eine Welt löschen möchte
 func _on_delete_world(world):
 	print("Lösche Welt: " + world.name)  # Gibt eine Nachricht im Debug aus
-	delete_world_files(world)  # Ruft die Funktion zum Löschen der Dateien der Welt auf
+	#delete_world_files(world)  # Ruft die Funktion zum Löschen der Dateien der Welt auf
 	load_worlds()  # Aktualisiert die Anzeige der Welten in der UI
 
 # Lädt alle gespeicherten Welten aus dem Verzeichnis "user://welten/"
@@ -96,10 +95,11 @@ func save_world(world: WorldResource):
 	if error != OK:
 		print("Fehler beim Speichern der Welt: ", error)
 
-func delete_world_files(world):
-	var path = "user://welten/" + world.name + ".tres"
-	if DirAccess.file_exists(path):
-		DirAccess.remove_absolute(path)
-		print("Welt " + world.name + " gelöscht!")
-	else:
-		print("Datei nicht gefunden: " + path)
+#func delete_world_files(world):
+	#var path = "user://welten/" + world.name + ".tres"
+	#var access = file_exists(path)
+	#if access:
+		#DirAccess.remove_absolute(path)
+		#print("Welt " + world.name + " gelöscht!")
+	#else:
+		#print("Datei nicht gefunden: " + path)
